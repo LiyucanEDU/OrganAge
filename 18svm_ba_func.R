@@ -75,10 +75,10 @@ if(RFE&length(optVariables)>5){
 
 
   if(length(which(isFALSE(healthyid)))==0){
-    OptModelsvm=tune(svm, age~., data=data_healthy)#,ranges=list(elsilon=seq(0,0.5,0.1), cost=1:costmax)
+    OptModelsvm=tune(svm, age~., data=data_healthy,ranges=list(elsilon=seq(0,0.5,0.1), cost=1:costmax))#
     BstModel=OptModelsvm$best.model
   }else{
-    OptModelsvm=tune(svm, age~., data=data)#,ranges=list(elsilon=seq(0,0.5,0.1), cost=1:costmax)
+    OptModelsvm=tune(svm, age~., data=data,ranges=list(elsilon=seq(0,0.5,0.1), cost=1:costmax))#
     BstModel=OptModelsvm$best.model
   }
 
