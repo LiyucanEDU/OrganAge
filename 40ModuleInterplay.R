@@ -7,7 +7,7 @@ res_ref<-res
 sig_ref<-res_ref %>% filter(p.bonferroni<0.05)
 
 adj_ref<-cor2adj_func(sig_ref[,1:3])
-View(adj_ref)#287个节点
+View(adj_ref)
 net_ref<-graph_from_adjacency_matrix(adj_ref,mode="undirected",weighted=TRUE,diag=FALSE)
 
 
@@ -26,68 +26,6 @@ for (i in 1:length(mod_ref)) {
 }
 mem<-multireplace(V(net_ref)$name,mem_df$statname,mem_df$clu) %>% as.numeric()
 
-#3.画图====
-#只画与年龄相关的模块，每个器官的合成一个模块。脑，肾，心血管，骨，代谢，认知。
-##3.1器官标志物====
-vascular_statname<-lc_0424[[1]]$statname
-bone_statname<-lc_0424[[8]]$statname
-cognitive_statname<-lc_0424[[10]]$statname
-
-brain_statname<-c()
-for (i in c(23,25,28,30)){
-  brain_statname<-c(lc_0424[[i]]$statname,brain_statname)
-}
-
-gut_statname<-c()#还是用psdr
-for (i in c(5,11,19)){
-  gut_statname<-c(lc_0424[[i]]$statname,gut_statname)
-}
-kidney_statname<-c('CYS_C','UA','UREA','CREA','Cre')
-
-metabolism_statname<-c()
-for (i in c(2,12)){
-  metabolism_statname<-c(lc_0424[[i]]$statname, metabolism_statname)
-}
-
-organ_statname_list<-list(vascular_statname,bone_statname,brain_statname,
-                          gut_statname,kidney_statname,metabolism_statname)#,cognitive_statname
-##3.2标志物构成的子网络 ====
-##先弄一个对照表
-names(organ_statname_list)<-c('Cardiovascular','Bone','Brain','Gut','Kidney','Metabolic')#,'Cognition'
-
-organ_statname_df<-data.frame()
-for (i in 1:6) {
-  Organ<- names(organ_statname_list)[i]
-  statname <-organ_statname_list[[i]]
-  clu_id<-i
-  organ_statname_df<-rbind(organ_statname_df,data.frame(Organ=Organ,statname=statname,clu_id=clu_id))
-}
-organ_statname_df$graphID<-multireplace(organ_statname_df$statname,V(net_ref)$name,
-                                        as.numeric(V(net_ref)))%>% as.numeric()
-organ_net<-induced.subgraph(net_ref,as.numeric(organ_statname_df$graphID))
-organ_statname_df$subgraphID<-multireplace(organ_statname_df$statname,
-                                           V(organ_net)$name,as.numeric(V(organ_net)))%>% as.numeric()
-V(organ_net)$clu<-multireplace(V(organ_net)$name,organ_statname_df$statname,organ_statname_df$Organ)
-V(organ_net)$clu_id<-multireplace(V(organ_net)$name,organ_statname_df$statname,
-                                  organ_statname_df$clu_id)%>% as.numeric()
-col<-c('#E69F00','#56B4E9','#009E73','#0072B2','#D55E00','#CC79A7')#,'#F0E442'
-col_df<-data.frame(organ=c('Cardiovascular','Bone','Brain','Gut','Kidney','Metabolic'),
-                   col=col)#,'Cognition'
-V(organ_net)$color<-multireplace(V(organ_net)$clu,col_df$organ,col_df$col)
-
-plot(organ_net)
-
-##3.3导到cytos里面====
-#把几个模块拉开，看看和相关矩阵有没有联系
-
-if(!"RCy3" %in% installed.packages()){
-  install.packages("BiocManager")
-  BiocManager::install("RCy3")
-}
-library(RCy3)
-
-cytoscapePing()
-createNetworkFromIgraph(organ_net,"organNet")
 
 
 # 3.4计算模块间的连接强度====
