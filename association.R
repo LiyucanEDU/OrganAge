@@ -1,35 +1,9 @@
-#看一下年龄在cvevent上是否有差异
-descrTable(CVD~Cardiac+Bone+Cognition+Brain+Gut+Kidney+Metab.+Body+Body_Brain,
-           data=BaseFollowDiseaseBA)
-
 
 #1.加载R包====
 library(compareGroups)
 library(readxl)
 library(dplyr)
 #2.读取ba数据====
-load("D:/work/01衰老/02标志物/20230417/03output/svm_res_0602.Rdata")
-load('./06newoutput/09SvmRes/BodySexSepa_gap.Rdata')
-bagap<-bagap_bodysepe
-
-load('./06newoutput/09SvmRes/BodySexSepa_gaplm.Rdata')
-bagaplm<-bagap_bodysepe
-
-load('./06newoutput/09SvmRes/BodySexSepa_ba.Rdata')
-ba<-ba_predicted_bodysepe
-
-load('./06newoutput/09SvmRes/svm_res_1111_sepa.Rdata')
-bagaplm<-svm_res_1111_sepa[[1]][[4]]
-bagap<-svm_res_1111_sepa[[1]][[6]]
-
-load('./06newoutput/09SvmRes/svm_res_1116.Rdata')
-bagaplm<-svm_res_1116[[1]][[4]]
-bagap<-svm_res_1116[[1]][[6]]
-
-bagaplm<-svm_res_1127[[1]][[4]]
-bagap<-svm_res_1127[[1]][[6]]
-
-load('./06newoutput/09SvmRes/svm_res_0120.Rdata')
 bagaplm<-svm_res_0120[[1]][[4]]
 bagap<-svm_res_0120[[1]][[6]]
 
@@ -209,25 +183,6 @@ pairs.panels(bagap[,-c(1:3)],
 )
 
 
-#4.取ba完整的样本进行后续分析
-organ_complete<-c('Cardiovascular','Bone','Gut','Kidney','Metabolism','Brain','Body')#,'Cognition','Body.Brain'
-organ_simple<-c('Cardiac','Bone','Gut','Kidney','Metab.','Brain','Body')#,'Body.Brain','Cognition'
-
-load("D:/work/01衰老/02标志物/20230417/03output/svm_res_0602.Rdata")
-bagap<-svm_res[[4]]
-colnames(bagap)<-gsub('\nGap','',colnames(bagap), fixed = TRUE)
-colnames(bagap)<-gsub('Body_Brain','Body.Brain',colnames(bagap), fixed = TRUE)
-colnames(bagap)<-multireplace(colnames(bagap),organ_simple,organ_complete)
-ba_com<-bagap[complete.cases(bagap$Body.Brain),]
-descrTable(sex~.,data=ba_com)
-ba_scale<-ba_com
-ba_scale[,4:12]<-ba_com[,4:12] %>% scale()
-ba_scale1<-ba_scale
-ba_scale1$Cognition=NULL
-
-ba_scale_pcor<-ba_pcor_func(ba_scale)
-filename='./03output/07PcorHeatmap/0630scale.png'
-cor_plot_withPvalue_heatmap(ba_scale_pcor[,c(1,2,3,9)],filename=filename,organ_order = organ_order)#
 
 #5.ba和生活方式====
 #source("D:/work/01衰老/02标志物/20230417/22interplay_func.R")
