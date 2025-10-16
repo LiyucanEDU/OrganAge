@@ -13,9 +13,6 @@ svm_ba_func<-function(dat,organ_statname,organ_name,costmax=5){
   optVariables<-organ_statname
 
   #Tune the SVM model
-
-
-
   OptModelsvm=tune(svm, age~., data=data,ranges=list(elsilon=seq(0,0.5,0.1), cost=1:costmax))#
   BstModel=OptModelsvm$best.model
 
@@ -57,4 +54,5 @@ svm_ba_func<-function(dat,organ_statname,organ_name,costmax=5){
   names(final_list)[1]<-organ_res_name
   return(final_list)
 }
+
 
