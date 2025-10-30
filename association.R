@@ -471,7 +471,7 @@ perform_metabolic_health_tests <- function(dat_long_data) {
     group.by = 'organ',
     method = 'wilcox.test',
     p.adjust.method = 'none',
-    alternative = 'greater'
+    alternative = 'two.sided'
   )
   
   # Calculate effect sizes
@@ -480,7 +480,7 @@ perform_metabolic_health_tests <- function(dat_long_data) {
     wilcox_effsize(
       measure ~ MetabolicHealth,
       p.adjust.method = "fdr",
-      alternative = 'less'
+      alternative = 'two.sided'
     )
   
   # Combine test results
@@ -834,3 +834,4 @@ weight_func <- function(data, select_vars, weights) {
   weighted_sum <- as.matrix(data[, select_vars]) %*% weights / sum(weights)
   return(weighted_sum)
 }
+
