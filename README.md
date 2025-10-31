@@ -1,2 +1,2 @@
-# OrganAge
-## Synergistic and heterogeneous aging: insights from composite phenotypes and multiple organ systems aging clocks
+# Synergistic and Heterogeneous Aging Using Composite Phenotypes and Multiple Organ Systems Aging Clocks
+## This repository contains the core analysis code and supporting materials for the article
